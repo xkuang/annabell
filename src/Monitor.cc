@@ -15,18 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Monitor.h>
 #include <iostream>
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
 #include "enum_ssm.h"
-#include "ann_exception.h"
+#include "monitor.h"
 
 using namespace std;
 using namespace sizes;
 
-Monitor::Monitor(Annabell *sllm1)
+monitor::monitor(sllm *sllm1)
 {
   SLLM = sllm1;
   for (int iw=0; iw<WMSize; iw++) wflag[iw]=0;
@@ -41,15 +40,16 @@ Monitor::Monitor(Annabell *sllm1)
   Display.ConsoleFlag = true;
 }
 
-int Monitor::MapW(char *w)
+int monitor::MapW(char *w)
 {
   int idx=-1;
   
   for (int jw=0; jw<WMSize; jw++) {
     if (SLLM->IW->Nr[jw]->O>0.5) {
-      if (idx >= 0)
-	throw ann_exception("More than one winner!!"); //Display.Warning
-
+      if (idx >= 0) {
+	Display.Warning("Err >1 wnn!!");
+	exit(0);
+      }
       idx=jw;
     }
   }
@@ -69,7 +69,7 @@ int Monitor::MapW(char *w)
   return 0;
 }
 
-int Monitor::PrintWM(string name, vssm *wm)
+int monitor::PrintWM(string name, vssm *wm)
 {
   int idx=-1;
   
@@ -98,7 +98,7 @@ int Monitor::PrintWM(string name, vssm *wm)
   return 0;
 }
 
-int Monitor::PrintPhIM(string name, vssm *ph_i_m)
+int monitor::PrintPhIM(string name, vssm *ph_i_m)
 { 
   Display.Print(name+": ");
   for (int iw=0; iw<PhSize; iw++) {
@@ -110,7 +110,7 @@ int Monitor::PrintPhIM(string name, vssm *ph_i_m)
   return 0;
 }
 
-int Monitor::PrintPhM(string name, vssm *ph_m)
+int monitor::PrintPhM(string name, vssm *ph_m)
 {
   Display.Print(name+": ");
   for (int iy=0; iy<PhSize; iy++) {  
@@ -140,7 +140,7 @@ int Monitor::PrintPhM(string name, vssm *ph_m)
   return 0;
 }
 
-int Monitor::PrintSSMidx(string name, vssm *ssm1)
+int monitor::PrintSSMidx(string name, vssm *ssm1)
 {
   if (ssm1->NN()>1000 && ssm1->FillHighVect==false) {
     Display.Warning("FillHighVect=false for ssm with NN>1000\n");
@@ -167,7 +167,7 @@ int Monitor::PrintSSMidx(string name, vssm *ssm1)
   return 0;
 }
 
-int Monitor::PrintSSM(string name, vssm *ssm1)
+int monitor::PrintSSM(string name, vssm *ssm1)
 {
   Display.Print(name+":");
 
@@ -179,7 +179,7 @@ int Monitor::PrintSSM(string name, vssm *ssm1)
   return 0;
 }
 
-int Monitor::GetWM(string name, vssm *ph_m)
+int monitor::GetWM(string name, vssm *ph_m)
 {
   int idx=-1;
   for (int ix=0; ix<WMSize; ix++) {
@@ -205,7 +205,7 @@ int Monitor::GetWM(string name, vssm *ph_m)
   return 0;
 }
 
-int Monitor::GetPhM(string name, vssm *ph_m)
+int monitor::GetPhM(string name, vssm *ph_m)
 {
   for (int iy=0; iy<PhSize; iy++) {  
     int idx=-1;
@@ -236,7 +236,7 @@ int Monitor::GetPhM(string name, vssm *ph_m)
   return 0;
 }
 
-int Monitor::PrintElAct()
+int monitor::PrintElAct()
 {
   Display.Print("Next elaboration action: ");
   int na=-1;
@@ -255,7 +255,7 @@ int Monitor::PrintElAct()
   return 0;
 }
 
-int Monitor::PrintElActFL()
+int monitor::PrintElActFL()
 {
   Display.Print("Proposed elaboration action: ");
   int na=-1;
@@ -274,7 +274,7 @@ int Monitor::PrintElActFL()
   return 0;
 }
 
-int Monitor::PrintAcqAct()
+int monitor::PrintAcqAct()
 {
   Display.Print("Next acquisition action: ");
   int na=-1;
@@ -293,7 +293,7 @@ int Monitor::PrintAcqAct()
   return 0;
 }
 
-int Monitor::PrintRwdAct()
+int monitor::PrintRwdAct()
 {
   Display.Print("Reward action: ");
   int na=-1;
@@ -312,7 +312,7 @@ int Monitor::PrintRwdAct()
   return 0;
 }
 
-int Monitor::GetElAct()
+int monitor::GetElAct()
 {
 
   int na=-1;
@@ -330,7 +330,7 @@ int Monitor::GetElAct()
   return na;
 }
 
-int Monitor::GetElActFL()
+int monitor::GetElActFL()
 {
 
   int na=-1;
@@ -348,7 +348,7 @@ int Monitor::GetElActFL()
   return na;
 }
 
-int Monitor::ParseCommand(vector<string> input_token)
+int monitor::ParseCommand(vector<string> input_token)
 {
   Display.Print("Monitor: \n");
   if (input_token.size()>1) {
@@ -466,7 +466,7 @@ int Monitor::ParseCommand(vector<string> input_token)
   return 1;
 
 }
-int Monitor::Print()
+int monitor::Print()
 {
   int imode;
   for (imode=0; imode<ModeNum && SLLM->ModeFlags->Nr[imode]->O<0.5; imode++);
@@ -770,7 +770,7 @@ int Monitor::Print()
   return 0;
 }
 
-int Monitor::ModeMessage(std::string msg)
+int monitor::ModeMessage(std::string msg)
 {
   if (ModeMessageFlag) {
     Display.Print("-------------------------------------------------------\n");
@@ -780,7 +780,7 @@ int Monitor::ModeMessage(std::string msg)
   return 0;
 }
 
-const std::string Monitor::ObjName[] = {
+const std::string monitor::ObjName[] = {
   "Header",
   "IW","CW","PhI","InFlag","FlushIn","InI","InEqW","InEqWC",
   "InPhFL","InPhB","InIfW",
@@ -844,24 +844,24 @@ const std::string Monitor::ObjName[] = {
   "RetrGoal", "BuildGoal", "GoalMem"
 };
 
-const std::string Monitor::ModeName[] = {
+const std::string monitor::ModeName[] = {
   "null_mode", "acquire", "associate", "explore", "explore2", "exploit",
   "best_exploit", "reward"
 };
 
-const std::string Monitor::ElActName[ElActSize+1]={
+const std::string monitor::ElActName[ElActSize+1]={
   "NULL_ACT", "FLUSH_WG", "W_FROM_WK", "W_FROM_IN", "NEXT_W", "GET_W",
   "RETR_AS", "FLUSH_OUT", "WG_OUT", "GET_NEXT_PH", "GET_START_PH",
   "CONTINUE", "DONE", "PUSH_GL", "DROP_GL", "GET_GL_PH",
   "EL_ACT_15", "EL_ACT_16", "EL_ACT_17", "EL_ACT_18", "EL_ACT_19"
 };
 
-const std::string Monitor::AcqActName[AcqActSize+1]={
+const std::string monitor::AcqActName[AcqActSize+1]={
   "NULL_ACT", "FLUSH", "ACQ_W", "NEXT_AS_W", "BUILD_AS", "MEM_PH",
   "SET_START_PH"
 };
 
-const std::string Monitor::RwdActName[RwdActSize+1]={
+const std::string monitor::RwdActName[RwdActSize+1]={
   "NULL_RWD", "STORE_ST_A", "START_ST_A", "RETR_ST_A", "RWD_ST_A",
   "CHANGE_ST_A", "GET_ST_A", "RETR_EL_A", "STORE_SAI", "RETR_SAI", "RETR_ST",
   "RWD_ACT_10", "RWD_ACT_11", "RWD_ACT_12", "RWD_ACT_13", "RWD_ACT_14"

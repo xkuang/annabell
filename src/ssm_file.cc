@@ -15,13 +15,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Monitor.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include "ssm.h"
 #include "sizes.h"
-#include "ann_exception.h"
+#include "monitor.h"
 
 using namespace std;
 using namespace sizes;
@@ -30,8 +29,10 @@ template <typename T>
 int FREAD(T *var, int size, int nmemb, FILE *fp)
 {
   int err = fread(var, size, nmemb, fp);
-  if (err!=nmemb)
-    throw ann_exception("Error reading file\n");
+  if (err!=nmemb) {
+    cerr << "Error reading file\n";
+    exit(0);
+  }
 
   return 0;
 }
@@ -211,7 +212,7 @@ int vssm::LoadInputLinks(FILE *fp)
   return 0;
 }
 
-int Monitor::SaveWM(FILE *fp)
+int monitor::SaveWM(FILE *fp)
 {
   for (int iw=0; iw<WMSize; iw++) {
     fwrite(&wflag[iw], sizeof(int), 1, fp);
@@ -223,7 +224,7 @@ int Monitor::SaveWM(FILE *fp)
   return 0;
 }
 
-int Monitor::LoadWM(FILE *fp)
+int monitor::LoadWM(FILE *fp)
 {
   for (int iw=0; iw<WMSize; iw++) {
     FREAD(&wflag[iw], sizeof(int), 1, fp);

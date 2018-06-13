@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include "ssm.h"
 #include <omp.h>
-#include "gettime.h"
 using namespace std;
 
 #define THREAD_MAXNUM omp_get_max_threads()
@@ -31,7 +30,7 @@ int ssm_as::OMPActiv()
   if (WTA_FLAG==T_NEW_WTA || WTA_FLAG==T_NEW_KWTA) N = NewWnnNum;
   else N = NN();
 
-  GetRealTime(&clk0);
+  clock_gettime( CLOCK_REALTIME, &clk0);
 
   Forced=false;
   int i;
@@ -49,7 +48,7 @@ int ssm_as::OMPActiv()
     }
   }
 
-  GetRealTime(&clk1);
+  clock_gettime( CLOCK_REALTIME, &clk1);
   act_time = act_time
     + clk1.tv_sec - clk0.tv_sec + (double)(clk1.tv_nsec - clk0.tv_nsec)*1e-9;
 
@@ -91,7 +90,7 @@ int ssm_as::OMPSparseActiv()
   //  Nr[i]->A = Nr[i]->B + GB - n_high;
   //}
   Forced=false;
-  GetMonotonicTime(&clk0);
+  clock_gettime( CLOCK_MONOTONIC, &clk0);
 #pragma omp parallel for default(shared) collapse(1)
   for (unsigned int issm=0; issm<SparseInSSM.size(); issm++) {
     float wgmin = SparseInMinWeight[issm];
@@ -107,7 +106,7 @@ int ssm_as::OMPSparseActiv()
 	float wg = *lk_wg_it;
 	OMPActivArr[THREAD_IDX][inr1] += in_sign*(wg-wgmin);
 	//float f=in_sign*(wg-DefaultMinWg);
-	//if (f!=2) {cout << "here " << f << endl; ex it(0); }
+	//if (f!=2) {cout << "here " << f << endl; exit(0); }
 	// the second term compensates for the original
 	// assumption that neurons are unconnected
 	// and have default (negative) weights
@@ -121,7 +120,7 @@ int ssm_as::OMPSparseActiv()
       //}
     }
   }
-  GetMonotonicTime(&clk1);
+  clock_gettime( CLOCK_MONOTONIC, &clk1);
 
 #pragma omp parallel for default(shared) collapse(1)
   for(int i=0; i<N; i++) {

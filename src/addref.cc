@@ -15,16 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Annabell.h>
 #include <iostream>
 #include <vector>
+#include "sllm.h"
 #include "sizes.h"
 #include "interface.h"
 
 using namespace std;
 using namespace sizes;
 
-int Annabell::AddRef()
+int sllm::AddRef()
 {
 #ifdef FAST_SSM
   InPhFL->AddSparseRefRows(IW);

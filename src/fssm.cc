@@ -20,14 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include "fssm.h"
 #include "rnd.h"
-#include "ann_exception.h"
-#include "gettime.h"
 
 using namespace std;
 
 int fssm::SparseActiv()
 {
-  throw ann_exception("Error: SparseActiv not implemented for fssm\n");
+  cout << "Error: SparseActiv not implemented for fssm\n";
+  exit(0);
 
   return 0;
 }
@@ -37,7 +36,7 @@ int fssm::Activ()
   struct timespec clk0, clk1;
 
   if (SparseLkFlag) return SparseActiv();
-  GetRealTime(&clk0);
+  clock_gettime( CLOCK_REALTIME, &clk0);
   Forced=false;
   ActivVect.clear();
   for (unsigned int iv=0; iv<SparseRef.size(); iv++) {
@@ -54,7 +53,7 @@ int fssm::Activ()
     }
   }
 
-  GetRealTime(&clk1);
+  clock_gettime( CLOCK_REALTIME, &clk1);
   act_time = act_time
     + clk1.tv_sec - clk0.tv_sec + (double)(clk1.tv_nsec - clk0.tv_nsec)*1e-9;
 
@@ -65,7 +64,7 @@ int fssm::Out()
 {
   struct timespec clk0, clk1;
 
-  GetRealTime(&clk0);
+  clock_gettime( CLOCK_REALTIME, &clk0);
   Clear();
 
   for(unsigned int i=0; i<ActivVect.size(); i++) {
@@ -78,7 +77,7 @@ int fssm::Out()
   }
   SetDefault();
 
-  GetRealTime(&clk1);
+  clock_gettime( CLOCK_REALTIME, &clk1);
   out_time = out_time
     + clk1.tv_sec - clk0.tv_sec + (double)(clk1.tv_nsec - clk0.tv_nsec)*1e-9;
 
@@ -313,7 +312,8 @@ int fssm::ActivWnn()
 
 int fssm::WTA()
 {
-  throw ann_exception("Error: WTA not implemented for fssm\n");
+  cout << "Error: WTA not implemented for fssm\n";
+  exit(0);
   
   return 0;
 }
@@ -325,9 +325,10 @@ int fssm::NewWnn()
   if (!NullIn()) {
     imax = NewWnnNum;
     NewWnnNum++;
-    if (NewWnnNum>NN())
-      throw ann_exception("NewWnn overflow\n");
-
+    if (NewWnnNum>NN()) {
+      cout << "Error: NewWnn overflow\n";
+      exit(0);
+    }
     Nr[imax]->O = 1;
     Nr[imax]->Used = 1;
     NHigh = 1;
@@ -340,9 +341,9 @@ int fssm::NewWnn()
 
 int fssm::NewWTA()
 {
-  throw ann_exception("Error: NewWTA not implemented for fssm\n");
- 
-  return 0;
+  cout << "Error: NewWTA not implemented for fssm\n";
+  exit(0);
+
 }
 
 int fssm::NumWnn()
@@ -435,7 +436,7 @@ int fssm2d::Activ()
   fssm::Activ();
   struct timespec clk0, clk1;
 
-  GetRealTime(&clk0);
+  clock_gettime( CLOCK_REALTIME, &clk0);
   for (unsigned int iv=0; iv<SparseRefRow.size(); iv++) {
     for (unsigned int i=0; i<SparseRefRow[iv]->size(); i++) {
       int ix = SparseRefRow[iv]->at(i);
@@ -469,7 +470,7 @@ int fssm2d::Activ()
     }
   }
 
-  GetRealTime(&clk1);
+  clock_gettime( CLOCK_REALTIME, &clk1);
   act_time = act_time
     + clk1.tv_sec - clk0.tv_sec + (double)(clk1.tv_nsec - clk0.tv_nsec)*1e-9;
 
@@ -480,7 +481,7 @@ int fssm2d::Out()
 {
   struct timespec clk0, clk1;
 
-  GetRealTime(&clk0);
+  clock_gettime( CLOCK_REALTIME, &clk0);
   NHigh = 0;
   for(unsigned int i=0; i<HighVect.size(); i++) {
     int inr = HighVect[i];
@@ -510,7 +511,7 @@ int fssm2d::Out()
   }
   SetDefault();
   
-  GetRealTime(&clk1);
+  clock_gettime( CLOCK_REALTIME, &clk1);
   out_time = out_time
     + clk1.tv_sec - clk0.tv_sec + (double)(clk1.tv_nsec - clk0.tv_nsec)*1e-9;
 

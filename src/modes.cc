@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Annabell.h>
 #include <iostream>
 #include <vector>
+#include "sllm.h"
 #include "sizes.h"
 #include "interface.h"
 #include "rnd.h"
@@ -28,7 +28,7 @@ int tmp = 0;
 //////////////////////////////////////////////////////////////////////
 // Acquire operating mode architecture
 //////////////////////////////////////////////////////////////////////
-int Annabell::AcquireArch()
+int sllm::AcquireArch()
 {
   //Flag used to start the acquisition process 
   StartAcquireFlag = new ssm(1);
@@ -110,7 +110,7 @@ int Annabell::AcquireArch()
   return 0;
 }
 
-int Annabell::AcquireUpdate()
+int sllm::AcquireUpdate()
 {
   Acquire->ActivOut();
   FlushAcquireFlag->ActivOut();
@@ -140,7 +140,7 @@ int Annabell::AcquireUpdate()
 //////////////////////////////////////////////////////////////////////
 // Associate operating mode architecture
 //////////////////////////////////////////////////////////////////////
-int Annabell::AssociateArch()
+int sllm::AssociateArch()
 {
   //Flag used to start the build-association process 
   StartAssociateFlag = new ssm(1);
@@ -335,7 +335,7 @@ int Annabell::AssociateArch()
   return 0;
 }
 
-int Annabell::AssociateUpdate()
+int sllm::AssociateUpdate()
 {
   Associate->ActivOut();
   StartSkipWFlag->ActivOut();
@@ -391,7 +391,7 @@ int Annabell::AssociateUpdate()
 //////////////////////////////////////////////////////////////////////
 // Reward operating mode architecture
 //////////////////////////////////////////////////////////////////////
-int Annabell::RewardArch()
+int sllm::RewardArch()
 {
   //Flag used to start the reward process 
   StartRewardFlag = new ssm(1);
@@ -572,7 +572,7 @@ int Annabell::RewardArch()
   return 0;
 }
 
-int Annabell::RewardUpdate()
+int sllm::RewardUpdate()
 {
   Reward->ActivOut();
   StartIterIFlag->ActivOut();
@@ -637,7 +637,7 @@ int Annabell::RewardUpdate()
 //////////////////////////////////////////////////////////////////////
 // Exploit operating mode architecture
 //////////////////////////////////////////////////////////////////////
-int Annabell::ExploitArch()
+int sllm::ExploitArch()
 {
   //Flag used to start the exploitation process 
   StartExploitFlag = new ssm(1);
@@ -1019,7 +1019,7 @@ int Annabell::ExploitArch()
   return 0;
 }
 
-int Annabell::ExploitUpdate()
+int sllm::ExploitUpdate()
 {
   Exploit->ActivOut();
   FlushExploitFlag->ActivOut();
@@ -1157,7 +1157,7 @@ int Annabell::ExploitUpdate()
 //////////////////////////////////////////////////////////////////////
 // Explore operating mode architecture
 //////////////////////////////////////////////////////////////////////
-int Annabell::ExploreArch()
+int sllm::ExploreArch()
 {
   //Flags
   StartExploreFlag = new ssm(1);
@@ -1625,7 +1625,7 @@ int Annabell::ExploreArch()
 }
 
 
-int Annabell::ExploreUpdate()
+int sllm::ExploreUpdate()
 {
   Explore->ActivOut();
   FlushExploreFlag->ActivOut();
