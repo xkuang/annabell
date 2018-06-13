@@ -20,7 +20,7 @@ mv libg* /usr/lib/
 
 
 # annabell repo
-git clone https://github.com/golosio/annabell.git /home/vagrant/annabell
+git clone https://github.com/xkuang/annabell.git /home/vagrant/annabell
 
 # annabell build
 cd /home/vagrant/annabell
